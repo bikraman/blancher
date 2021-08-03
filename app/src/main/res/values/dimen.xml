@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="icon_size">45dp</dimen>
+    <dimen name="margin">8dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="text_size">16sp</dimen>
+    <dimen name="text_size_topic">14sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+
+    <dimen name="screen_padding">16dp</dimen>
+</resources>
