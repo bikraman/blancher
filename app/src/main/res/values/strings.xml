@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">bluchr</string>
+    <string name="bluchr_shared_pref">bluchr_shared_pref</string>
+    <string name="string_all_apps">All Apps</string>
+    <string name="string_favorite_apps">Favorite Apps</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
