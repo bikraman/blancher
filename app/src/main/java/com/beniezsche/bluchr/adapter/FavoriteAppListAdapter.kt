@@ -44,10 +44,10 @@ class FavoriteAppListAdapter(private val context: Context, private val appList: 
 //
 //
 //        val deviceWidth = displayMetrics.widthPixels / 4
-        holder.itemView.layoutParams.width = itemWidth
+//        holder.itemView.layoutParams.width = itemWidth
 
 
-        holder.ivAppIcon.setImageDrawable(appInfo.icon)
+//        holder.ivAppIcon.setImageDrawable(appInfo.icon)
         holder.tvAppName.text = appInfo.label
 
         holder.itemView.setOnClickListener {
@@ -66,7 +66,7 @@ class FavoriteAppListAdapter(private val context: Context, private val appList: 
 
     class AppViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
-        val ivAppIcon: ImageView = itemView.findViewById(R.id.iv_app_icon)
+//        val ivAppIcon: ImageView = itemView.findViewById(R.id.iv_app_icon)
         val tvAppName: TextView = itemView.findViewById(R.id.tv_app_name)
 //        val cvParent: ConstraintLayout = itemView.findViewById(R.id.cv_parent)
 

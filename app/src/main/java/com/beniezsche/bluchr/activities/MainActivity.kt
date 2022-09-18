@@ -28,7 +28,7 @@ class MainActivity : BaseActivity(), View.OnTouchListener {
 
         val linearLayoutManager = LinearLayoutManager(this@MainActivity)
 
-        linearLayoutManager.orientation = RecyclerView.HORIZONTAL
+        linearLayoutManager.orientation = RecyclerView.VERTICAL
         rv_favorite_apps.adapter = FavoriteAppListAdapter(this@MainActivity, getAllFavoriteApps())
         rv_favorite_apps.layoutManager = linearLayoutManager
 
