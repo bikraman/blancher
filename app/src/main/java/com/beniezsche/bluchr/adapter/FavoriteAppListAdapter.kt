@@ -6,12 +6,12 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.beniezsche.bluchr.activities.MainActivity
+import com.beniezsche.bluchr.activities.HomeActivity
 import com.beniezsche.bluchr.R
 import com.beniezsche.bluchr.model.AppInfo
+import com.beniezsche.bluchr.model.Favorites
 
 
 class FavoriteAppListAdapter(private val context: Context, private val appList: ArrayList<AppInfo>): RecyclerView.Adapter<FavoriteAppListAdapter.AppViewHolder>() {
@@ -23,7 +23,7 @@ class FavoriteAppListAdapter(private val context: Context, private val appList: 
     init {
 
         @Suppress("DEPRECATION")
-        (context as MainActivity).windowManager.defaultDisplay.getMetrics(displayMetrics)
+        (context as HomeActivity).windowManager.defaultDisplay.getMetrics(displayMetrics)
         itemWidth = displayMetrics.widthPixels / 4
     }
 
@@ -54,6 +54,17 @@ class FavoriteAppListAdapter(private val context: Context, private val appList: 
 
             val launchIntent = context.packageManager.getLaunchIntentForPackage(appInfo.packageName.toString())
             context.startActivity(launchIntent)
+        }
+
+        holder.itemView.setOnLongClickListener {
+
+            Favorites.removeFromList(position, context)
+            appList.removeAt(position)
+            notifyDataSetChanged()
+
+            Toast.makeText(context, "Removed from favorites", Toast.LENGTH_SHORT).show()
+
+            true
         }
 
 

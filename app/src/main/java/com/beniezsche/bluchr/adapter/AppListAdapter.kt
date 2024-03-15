@@ -14,16 +14,11 @@ import com.beniezsche.bluchr.activities.AppListActivity
 import com.beniezsche.bluchr.activities.BaseActivity
 import com.beniezsche.bluchr.model.AppInfo
 import com.beniezsche.bluchr.model.Favorites
+import com.beniezsche.bluchr.util.DrawableUtil
 import com.google.gson.Gson
 
 
 class AppListAdapter(private val context: Context, private val appList: ArrayList<AppInfo>): RecyclerView.Adapter<AppListAdapter.AppViewHolder>() {
-
-    private var list = ArrayList<AppInfo>()
-
-    init {
-        list = appList
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, itemType: Int): AppViewHolder {
 
@@ -33,9 +28,9 @@ class AppListAdapter(private val context: Context, private val appList: ArrayLis
 
     override fun onBindViewHolder(holder: AppViewHolder, position: Int) {
 
-        val appInfo = list[position]
+        val appInfo = appList[position]
 
-        holder.ivAppIcon.setImageDrawable(appInfo.icon)
+        holder.ivAppIcon.setImageDrawable(DrawableUtil.base64ToDrawable(appInfo.icon))
         holder.tvAppName.text = appInfo.label
 
         holder.itemView.setOnClickListener {
@@ -47,19 +42,16 @@ class AppListAdapter(private val context: Context, private val appList: ArrayLis
 
         holder.itemView.setOnLongClickListener {
 
-            val favoritesList = Favorites.favoriteAppList
+            val favoritesList = Favorites.getFavoriteAppsList(context)
 
-            if(favoritesList != null){
-                if(favoritesList.size < 5){
+            if(favoritesList.size < 5) {
 
-                    Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show()
-                }
-                else{
-                    Toast.makeText(context, "Favorites list already too much", Toast.LENGTH_SHORT).show()
-                }
-
+                Favorites.addToList(appInfo, context)
+                Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show()
             }
-
+            else{
+                Toast.makeText(context, "Favorites list already too much", Toast.LENGTH_SHORT).show()
+            }
 
             true
         }
@@ -67,13 +59,13 @@ class AppListAdapter(private val context: Context, private val appList: ArrayLis
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return appList.size
     }
 
     fun setCurrentList(newList: ArrayList<AppInfo>){
 
-        list.clear()
-        list.addAll(newList)
+        appList.clear()
+        appList.addAll(newList)
         notifyDataSetChanged()
     }
 

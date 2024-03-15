@@ -1,58 +1,72 @@
-package com.beniezsche.bluchr.activities
+package com.beniezsche.bluchr.fragments
 
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.beniezsche.bluchr.R
+import com.beniezsche.bluchr.activities.AppListActivity
 import com.beniezsche.bluchr.adapter.AppListAdapter
+import com.beniezsche.bluchr.adapter.FavoriteAppListAdapter
 import com.beniezsche.bluchr.model.AppInfo
+import com.beniezsche.bluchr.model.Favorites
 import com.beniezsche.bluchr.util.DrawableUtil
+import java.util.*
+import kotlin.collections.ArrayList
 
-
-class AppListActivity : BaseActivity() {
+class AllAppsFragment : Fragment() {
 
     lateinit var  appListAdapter: AppListAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_all_apps)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-        val rvAllApps = findViewById<RecyclerView>(R.id.rv_all_apps)
-        val etAppName = findViewById<EditText>(R.id.et_app_name)
+        return inflater.inflate(R.layout.fragment_all_apps, container, false)
+    }
 
-        val w = window // in Activity's onCreate() for instance
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        w.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
+        val rvAllApps = view.findViewById<RecyclerView>(R.id.rv_all_apps)
+        val etAppName = view.findViewById<EditText>(R.id.et_app_name)
 
-        rvAllApps.layoutManager = LinearLayoutManager(this)
-        appListAdapter = AppListAdapter(this,getAllApps())
+
+        rvAllApps.layoutManager = LinearLayoutManager(context)
+        appListAdapter = AppListAdapter(requireContext(),getAllApps())
 
         rvAllApps.adapter = appListAdapter
 
-        etAppName.addTextChangedListener(object : TextWatcher{
+        val appList = getAllApps()
+
+        etAppName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-                var string = p0.toString()
+                val string = p0.toString()
 
-                var list = getApp(string)
+                val list = getApp(string, appList)
 
                 appListAdapter.setCurrentList(list)
 
                 if(list.size == 1){
-                    openApp(list[0].packageName.toString())
+                    openApp(list[0].packageName)
                 }
 
             }
@@ -60,16 +74,14 @@ class AppListActivity : BaseActivity() {
             override fun afterTextChanged(p0: Editable?) {
 
             }
-
-
         })
     }
 
-    private fun getApp(name: String): ArrayList<AppInfo> {
+    private fun getApp(name: String, applist: ArrayList<AppInfo>): ArrayList<AppInfo> {
 
         val list = ArrayList<AppInfo>()
 
-        for(app in getAllApps()) {
+        for(app in applist) {
             if (app.label.contains(name,true)){
                 list.add(app)
             }
@@ -79,14 +91,14 @@ class AppListActivity : BaseActivity() {
     }
 
     private fun openApp(packageName: String){
-        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+        val launchIntent = activity?.packageManager?.getLaunchIntentForPackage(packageName)
         startActivity(launchIntent)
-        finish()
+//        finish()
     }
 
     private fun getAllApps(): ArrayList<AppInfo> {
 
-        val pm: PackageManager = packageManager
+        val pm: PackageManager = activity?.packageManager!!
         val appsList = ArrayList<AppInfo>()
 
         val i = Intent(Intent.ACTION_MAIN, null)
@@ -101,11 +113,12 @@ class AppListActivity : BaseActivity() {
             appsList.add(app)
         }
 
+        appsList.sortBy { appInfo ->
+            appInfo.label.uppercase()
+        }
+
         return appsList
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
-    }
+
 }
